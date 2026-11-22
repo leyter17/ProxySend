@@ -1,0 +1,63 @@
+=====================================================================
+ ProxySend v2.4.0 - CODIGO FUENTE (Rust + egui, interfaz azul)
+ Creado por: Leyter Vázquez . V
+=====================================================================
+
+Como compilar (necesitas Rust 1.75 o mas nuevo):
+
+    cd proxysend-src
+    cargo build --release    # binario en target/release/proxysend
+
+Probar el binario:
+
+    ./target/release/proxysend --version
+    ./target/release/proxysend --ayuda
+    ./target/release/proxysend --probar http://127.0.0.1:3128
+    ./target/release/proxysend --informe
+
+Estructura del codigo:
+
+    src/main.rs       punto de entrada, CLI (--aplicar, --quitar, --informe,
+                      --verificar, --probar, --autostart), instancia unica
+    src/core.rs       logica pura: validacion, URLs de proxy, /etc/environment,
+                      bloques de ~/.bashrc (marcadores >>> ProxySend <<<)
+    src/store.rs      modelo y persistencia (~/.config/ProxySend, compatible v1.x)
+    src/ops.rs        operaciones de alto nivel + registro de eventos
+    src/sysops.rs     escritorio (GNOME/COSMIC gsettings, KDE kioslaverc, XFCE,
+                      otros), /etc/environment con pkexec (con mensaje claro
+                      si se cancela la contrasena), terminales, autoarranque,
+                      prueba con curl de respaldo
+    src/nettest.rs    prueba de conexion con motor interno ureq/rustls
+    src/tray.rs       bandeja del sistema (StatusNotifierItem, Rust puro)
+    src/eventlog.rs   registro de eventos (info/aviso/error) en memoria +
+                      ~/.config/ProxySend/eventos.log + hook de panics;
+                      deduplicacion memoria/archivo (corregido en 2.2.1)
+    src/watcher.rs    temporizador de reconexion automatica (verifica el
+                      proxy activo y lo re-aplica si falla)
+    src/libexport.rs  exportar/importar la biblioteca completa (perfiles +
+                      ajustes + historial) a JSON
+    src/report.rs     informe diagnostico completo (10 secciones, contrasenas
+                      ocultas) para la pantalla Informe y --informe
+    src/tests.rs      pruebas unitarias de la logica
+    src/ui/           interfaz egui AZUL (v2.4.0) en espanol e ingles:
+                      barra lateral navy con iconos dibujados (painter),
+                      boton de encendido con arco real (arc_stroke), tarjetas
+                      con sombra suave, pagina modal de biblioteca en una
+                      sola capa, indicadores "en curso" con reloj de
+                      seguridad y campos con resalte; paleta y tema en
+                      ui/mod.rs, widgets en ui/widgets.rs y paginas en
+                      ui/pages.rs (Estado, Ajustes, Mis proxies, Historial,
+                      Informe, Acerca de)
+
+    empaquetado/      script que genera los 4 paquetes de descarga
+                      (AppImage, .deb, .tar.gz, .run) todos por debajo de 30 MB
+    verificaciones/   simulaciones: bateria de proxies reales HTTP/SOCKS5,
+                      matriz de escritorios GNOME/KDE/XFCE/COSMIC, verificacion
+                      de interfaz con Xvfb (clics reales automatizados con
+                      xauto.py) y portabilidad
+
+El archivo LEEME.txt (el readme.txt del paquete de descarga) tiene la
+documentacion completa para el usuario final, incluido el detalle de las
+novedades de la version 2.4.0 (interfaz azul, revision de codigo muerto,
+revision a fondo post-entrega con 4 errores reparados y simulacion E2E
+completa).

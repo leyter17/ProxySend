@@ -1,0 +1,27 @@
+[package]
+name = "proxysend"
+version = "2.4.0"
+edition = "2021"
+description = "Gestor de proxy para Linux con interfaz al estilo de LocalSend"
+license = "GPL-3.0-only"
+
+[dependencies]
+eframe = { version = "0.30.0", default-features = false, features = ["glow", "x11", "wayland", "default_fonts"] }
+egui = "0.30.0"
+image = { version = "0.25", default-features = false, features = ["png"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+ksni = { version = "0.3", features = ["blocking"] }
+zbus = { version = "5", default-features = false, features = ["async-io", "blocking-api"] }
+ureq = { version = "2", default-features = false, features = ["tls", "socks-proxy"] }
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+
+[profile.release]
+opt-level = "z"
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"
+
+[profile.release.package.image]
+opt-level = 2
